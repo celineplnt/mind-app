@@ -1,0 +1,1230 @@
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Mind. — Application DYS</title>
+<meta name="theme-color" content="#0a0612">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mind.">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Palette Liquid Glass — mode nuit premium */
+  --violet:#9d7fd4;
+  --violet-bright:#b199e8;
+  --violet-dark:#6b52a3;
+  --violet-light:rgba(157,127,212,.18);
+  --blanc:#ffffff;
+  --vert:rgba(94,204,186,.16);
+  --vert-solid:#5eccba;
+  --jaune:rgba(240,180,100,.16);
+  --gris:#a99fc4;
+  --gris-clair:#c9c2dc;
+  --texte:#f4f1fb;
+  --texte-sombre:#1a1226;
+  --radius:22px;
+  /* Verre */
+  --glass-bg:rgba(255,255,255,.07);
+  --glass-bg-strong:rgba(255,255,255,.12);
+  --glass-border:rgba(255,255,255,.14);
+  --glass-border-bright:rgba(255,255,255,.28);
+  --glass-shadow:0 8px 32px rgba(0,0,0,.37);
+  --glow-violet:0 0 40px rgba(157,127,212,.4);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Poppins',sans-serif;background:#0a0612;display:flex;justify-content:center;align-items:center;min-height:100vh;color:#f4f1fb}
+.brand,.logo-txt{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:-0.02em}
+
+/* ===== Fond animé avec halos ===== */
+#phone{
+  width:390px;height:844px;position:relative;overflow:hidden;
+  box-shadow:0 30px 90px rgba(0,0,0,.7);border-radius:46px;border:10px solid #050309;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(157,127,212,.35), transparent 60%),
+    radial-gradient(ellipse 70% 45% at 90% 25%, rgba(94,204,186,.18), transparent 55%),
+    radial-gradient(ellipse 90% 60% at 50% 100%, rgba(157,127,212,.28), transparent 65%),
+    linear-gradient(160deg, #150e24 0%, #0d0819 45%, #0a0612 100%);
+}
+@media(max-width:500px){
+  body{background:#0a0612}
+  #phone{
+    width:100vw;height:100dvh;border-radius:0;border:none;box-shadow:none;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 0%, rgba(157,127,212,.35), transparent 60%),
+      radial-gradient(ellipse 70% 45% at 90% 25%, rgba(94,204,186,.18), transparent 55%),
+      radial-gradient(ellipse 90% 60% at 50% 100%, rgba(157,127,212,.28), transparent 65%),
+      linear-gradient(160deg, #150e24 0%, #0d0819 45%, #0a0612 100%);
+  }
+}
+
+/* ===== Screens ===== */
+.screen{position:absolute;inset:0;background:transparent;display:none;flex-direction:column;overflow:hidden}
+.screen.active{display:flex}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+
+/* ===== Splash ===== */
+#splash{
+  justify-content:center;align-items:center;z-index:100;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 40%, rgba(157,127,212,.5), transparent 60%),
+    linear-gradient(160deg, #1a1030 0%, #0a0612 100%);
+}
+#splash .logo-txt{font-size:72px;color:#fff;animation:pop .8s cubic-bezier(.2,1.4,.4,1) both;text-shadow:0 0 60px rgba(157,127,212,.9)}
+#splash p{color:rgba(255,255,255,.6);font-size:13px;margin-top:12px;animation:fadeIn 1s .5s both}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ===== Onboarding ===== */
+#onboarding{background:transparent}
+.ob-slide{display:none;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:40px 32px;text-align:center}
+.ob-slide.active{display:flex;animation:slideIn .4s ease both}
+@keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+.ob-illu{
+  width:160px;height:160px;border-radius:48px;display:flex;align-items:center;justify-content:center;font-size:64px;margin-bottom:36px;
+  background:var(--glass-bg-strong);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+  border:1px solid var(--glass-border-bright);box-shadow:var(--glass-shadow),inset 0 1px 1px rgba(255,255,255,.2),var(--glow-violet);
+}
+.ob-slide h2{font-family:'Fredoka',sans-serif;font-weight:600;font-size:24px;color:var(--violet-bright);margin-bottom:14px;line-height:1.3}
+.ob-slide p{font-size:14px;color:var(--gris-clair);line-height:1.6}
+.ob-footer{padding:24px 32px 44px;display:flex;flex-direction:column;gap:18px;align-items:center}
+.dots{display:flex;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2);transition:.3s}
+.dot.on{background:var(--violet-bright);width:24px;border-radius:4px;box-shadow:0 0 12px rgba(157,127,212,.8)}
+
+/* ===== Boutons glass ===== */
+.btn{
+  color:#fff;border:none;border-radius:18px;padding:16px;font-family:'Poppins',sans-serif;font-weight:600;font-size:15px;width:100%;cursor:pointer;transition:.25s;
+  background:linear-gradient(135deg, rgba(157,127,212,.9), rgba(107,82,163,.85));
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--glass-border-bright);
+  box-shadow:0 8px 24px rgba(107,82,163,.5),inset 0 1px 1px rgba(255,255,255,.3);
+}
+.btn:active{transform:scale(.97);box-shadow:0 4px 12px rgba(107,82,163,.4),inset 0 1px 1px rgba(255,255,255,.2)}
+.btn.ghost{background:transparent;color:var(--gris-clair);font-weight:500;padding:8px;border:none;box-shadow:none;backdrop-filter:none}
+
+/* ===== Login ===== */
+#login{justify-content:center;padding:0 32px}
+#login .logo-txt{font-size:52px;color:var(--violet-bright);text-align:center;margin-bottom:6px;text-shadow:0 0 40px rgba(157,127,212,.7)}
+#login .sub{text-align:center;color:var(--gris);font-size:13px;margin-bottom:36px}
+.field{margin-bottom:14px}
+.field label{font-size:12px;font-weight:600;color:#f4f1fb;display:block;margin-bottom:6px}
+.field input{
+  width:100%;border-radius:14px;padding:14px 16px;font-family:'Poppins',sans-serif;font-size:14px;outline:none;transition:.2s;
+  background:var(--glass-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--glass-border);color:#f4f1fb;
+}
+.field input::placeholder{color:var(--gris)}
+.field input:focus{border-color:var(--violet-bright);box-shadow:0 0 20px rgba(157,127,212,.3)}
+.login-alt{text-align:center;font-size:12px;color:var(--gris);margin-top:20px}
+.login-alt b{color:var(--violet-bright);cursor:pointer}
+
+/* ===== App shell ===== */
+.app-header{padding:54px 22px 16px;display:flex;align-items:center;justify-content:space-between}
+.app-header .logo-txt{font-size:26px;color:var(--violet-bright);text-shadow:0 0 30px rgba(157,127,212,.6)}
+.avatar{
+  width:38px;height:38px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;cursor:pointer;
+  background:linear-gradient(135deg, var(--violet), var(--violet-dark));
+  border:1px solid var(--glass-border-bright);box-shadow:0 4px 16px rgba(107,82,163,.5),inset 0 1px 1px rgba(255,255,255,.3);
+}
+.page-title{font-family:'Fredoka',sans-serif;font-weight:600;font-size:22px;color:#f4f1fb;padding:0 22px;margin-bottom:4px}
+.page-sub{font-size:12.5px;color:var(--gris);padding:0 22px;margin-bottom:16px}
+
+/* ===== Bottom nav — verre dépoli ===== */
+.bottom-nav{
+  display:flex;padding:10px 6px 26px;
+  background:rgba(20,14,34,.6);backdrop-filter:blur(30px) saturate(1.5);-webkit-backdrop-filter:blur(30px) saturate(1.5);
+  border-top:1px solid var(--glass-border);box-shadow:0 -4px 30px rgba(0,0,0,.4);
+}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:#6d6489;font-size:9.5px;font-weight:500;transition:.25s}
+.nav-item svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav-item.on{color:var(--violet-bright);filter:drop-shadow(0 0 8px rgba(157,127,212,.8))}
+
+/* ===== Cards — verre ===== */
+.card{
+  border-radius:var(--radius);padding:16px;margin:0 22px 12px;
+  background:var(--glass-bg);backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);
+  border:1px solid var(--glass-border);box-shadow:var(--glass-shadow),inset 0 1px 1px rgba(255,255,255,.1);
+}
+.card.violet{
+  background:linear-gradient(135deg, rgba(157,127,212,.35), rgba(107,82,163,.25));
+  border:1px solid var(--glass-border-bright);color:#fff;
+  box-shadow:var(--glass-shadow),var(--glow-violet),inset 0 1px 1px rgba(255,255,255,.25);
+}
+.card.vert{background:linear-gradient(135deg, rgba(94,204,186,.25), rgba(94,204,186,.12));border:1px solid rgba(94,204,186,.3);box-shadow:var(--glass-shadow),0 0 30px rgba(94,204,186,.2),inset 0 1px 1px rgba(255,255,255,.15)}
+.card.jaune{background:linear-gradient(135deg, rgba(240,180,100,.25), rgba(240,180,100,.12));border:1px solid rgba(240,180,100,.3);box-shadow:var(--glass-shadow),inset 0 1px 1px rgba(255,255,255,.15)}
+.card.lila{background:var(--glass-bg-strong);border:1px solid var(--glass-border-bright);box-shadow:var(--glass-shadow),inset 0 1px 1px rgba(255,255,255,.15)}
+.row{display:flex;align-items:center;gap:12px}
+.ico{
+  width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;
+  background:var(--glass-bg-strong);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid var(--glass-border);box-shadow:inset 0 1px 1px rgba(255,255,255,.15);
+}
+.grow{flex:1;min-width:0}
+.t1{font-weight:600;font-size:14px;color:#f4f1fb}
+.t2{font-size:11.5px;color:var(--gris)}
+.card.violet .t2{color:rgba(255,255,255,.8)}
+.badge{font-size:10px;font-weight:600;padding:4px 10px;border-radius:99px;white-space:nowrap;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.b-violet{background:var(--violet-light);color:var(--violet-bright);border:1px solid rgba(157,127,212,.3)}
+.b-vert{background:rgba(94,204,186,.2);color:#7fd9c9;border:1px solid rgba(94,204,186,.3)}
+.b-jaune{background:rgba(240,180,100,.2);color:#e5b878;border:1px solid rgba(240,180,100,.3)}
+.section-h{display:flex;justify-content:space-between;align-items:center;padding:0 22px;margin:20px 0 10px}
+.section-h h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:16px;color:#f4f1fb}
+.section-h span{font-size:12px;color:var(--violet-bright);font-weight:600;cursor:pointer}
+
+/* Stats — verre */
+.stats{display:flex;gap:10px;padding:0 22px;margin-bottom:6px}
+.stat{
+  flex:1;border-radius:18px;padding:14px 12px;text-align:center;
+  background:var(--glass-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--glass-border);box-shadow:var(--glass-shadow),inset 0 1px 1px rgba(255,255,255,.1);
+}
+.stat .n{font-family:'Fredoka',sans-serif;font-weight:700;font-size:24px;color:var(--violet-bright)}
+.stat .l{font-size:10px;color:var(--gris);font-weight:500;margin-top:2px}
+
+/* Agenda */
+.cal-week{display:flex;gap:6px;padding:0 22px;margin-bottom:18px}
+.cal-day{
+  flex:1;text-align:center;padding:10px 0;border-radius:14px;cursor:pointer;transition:.2s;
+  background:var(--glass-bg);border:1px solid var(--glass-border);
+}
+.cal-day .d{font-size:10px;color:var(--gris);font-weight:500}
+.cal-day .n{font-weight:600;font-size:15px;margin-top:2px;color:#f4f1fb}
+.cal-day.sel{background:linear-gradient(135deg, var(--violet), var(--violet-dark));border-color:var(--glass-border-bright);box-shadow:var(--glow-violet)}
+.cal-day.sel .d{color:rgba(255,255,255,.8)}
+.cal-day.sel .n{color:#fff}
+.timeline-item{display:flex;gap:14px;padding:0 22px;margin-bottom:4px}
+.tl-time{font-size:11px;font-weight:600;color:var(--gris);width:42px;padding-top:16px;flex-shrink:0}
+.tl-card{
+  flex:1;border-radius:16px;padding:14px;margin-bottom:10px;
+  background:var(--glass-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--glass-border);box-shadow:var(--glass-shadow),inset 0 1px 1px rgba(255,255,255,.1);
+}
+
+/* Suivi */
+.child-tabs{display:flex;gap:8px;padding:0 22px;margin-bottom:16px}
+.child-tab{
+  padding:9px 18px;border-radius:99px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;transition:.2s;
+  background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--gris-clair);
+}
+.child-tab.on{background:linear-gradient(135deg, var(--violet), var(--violet-dark));color:#fff;border-color:var(--glass-border-bright);box-shadow:var(--glow-violet)}
+.progress-bar{height:8px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden;margin-top:10px}
+.progress-bar.dark{background:rgba(255,255,255,.12)}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--violet-bright),var(--violet));border-radius:99px;box-shadow:0 0 12px rgba(157,127,212,.6)}
+.progress-fill.violet{background:linear-gradient(90deg,var(--violet-bright),var(--violet))}
+
+/* Admin */
+.check{width:22px;height:22px;border-radius:8px;border:2px solid var(--glass-border-bright);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;background:var(--glass-bg)}
+.check.on{background:linear-gradient(135deg, var(--violet), var(--violet-dark));border-color:var(--violet-bright)}
+.check.on::after{content:'✓';color:#fff;font-size:13px;font-weight:700}
+.done .t1{text-decoration:line-through;color:var(--gris)}
+
+/* Famille */
+.msg{max-width:75%;padding:11px 15px;border-radius:18px;font-size:13px;line-height:1.45;margin-bottom:8px}
+.msg.me{background:linear-gradient(135deg, var(--violet), var(--violet-dark));color:#fff;margin-left:auto;border-bottom-right-radius:6px;box-shadow:0 4px 16px rgba(107,82,163,.4)}
+.msg.them{background:var(--glass-bg-strong);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-bottom-left-radius:6px;color:#f4f1fb}
+.msg .who{font-size:10px;font-weight:600;opacity:.65;margin-bottom:3px}
+
+/* Detail / settings */
+.back-btn{display:flex;align-items:center;gap:6px;color:var(--violet-bright);font-weight:600;font-size:14px;cursor:pointer;padding:54px 22px 10px}
+.set-row{display:flex;align-items:center;gap:14px;padding:15px 22px;border-bottom:1px solid var(--glass-border);cursor:pointer}
+.set-row .t1{font-size:14px}
+.chev{color:var(--gris);font-size:18px}
+.toggle{width:44px;height:26px;border-radius:99px;background:rgba(255,255,255,.15);position:relative;cursor:pointer;transition:.2s;flex-shrink:0;border:1px solid var(--glass-border)}
+.toggle::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.07);top:2px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.toggle.on{background:linear-gradient(135deg, var(--violet), var(--violet-dark));box-shadow:var(--glow-violet)}
+.toggle.on::after{left:21px}
+
+/* FAB */
+.fab{
+  position:absolute;bottom:104px;right:20px;width:54px;height:54px;border-radius:18px;color:#fff;border:none;font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;z-index:5;
+  background:linear-gradient(135deg, var(--violet-bright), var(--violet-dark));
+  border:1px solid var(--glass-border-bright);
+  box-shadow:0 8px 24px rgba(107,82,163,.6),var(--glow-violet),inset 0 1px 1px rgba(255,255,255,.3);
+}
+.fab:active{transform:scale(.92)}
+
+/* Toast */
+#toast{
+  position:absolute;bottom:110px;left:50%;transform:translateX(-50%) translateY(20px);color:#fff;padding:11px 20px;border-radius:14px;font-size:13px;opacity:0;pointer-events:none;transition:.3s;z-index:50;white-space:nowrap;
+  background:rgba(20,14,34,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border-bright);
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Modal */
+#modal-bg{position:absolute;inset:0;background:rgba(5,3,9,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:40;display:none;align-items:flex-end}
+#modal-bg.show{display:flex}
+#modal{background:rgba(26,18,38,.85);backdrop-filter:blur(40px) saturate(1.5);-webkit-backdrop-filter:blur(40px) saturate(1.5);border:1px solid var(--glass-border-bright);border-bottom:none;border-radius:28px 28px 0 0;width:100%;padding:26px 24px 40px;animation:up .3s ease both;color:#f4f1fb}
+@keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+#modal h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:18px;margin-bottom:18px}
+</style>
+
+</head>
+<body>
+<div id="phone">
+
+  <!-- SPLASH -->
+  <div class="screen active" id="splash">
+    <div class="logo-txt">mind.</div>
+    <p>L'esprit léger, enfin.</p>
+  </div>
+
+  <!-- ONBOARDING -->
+  <div class="screen" id="onboarding">
+    <div class="ob-slide active">
+      <div class="ob-illu" style="background:var(--violet-light)">🧠</div>
+      <h2>Trop de choses<br>à gérer ?</h2>
+      <p>Rendez-vous médicaux, séances d'orthophonie, dossiers MDPH, coordination… La charge mentale des parents d'enfants à besoins spécifiques est immense.</p>
+    </div>
+    <div class="ob-slide">
+      <div class="ob-illu" style="background:var(--vert)">📋</div>
+      <h2>Tout centralisé,<br>au même endroit</h2>
+      <p>mind. regroupe l'agenda médical, les suivis thérapeutiques, les démarches administratives et la coordination parentale dans une seule application.</p>
+    </div>
+    <div class="ob-slide">
+      <div class="ob-illu" style="background:var(--jaune)">💜</div>
+      <h2>L'esprit léger,<br>enfin.</h2>
+      <p>Concentrez-vous sur l'essentiel : votre enfant. mind. s'occupe de l'organisation.</p>
+    </div>
+    <div class="ob-footer">
+      <div class="dots"><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
+      <button class="btn" onclick="nextSlide()">Continuer</button>
+      <button class="btn ghost" onclick="go('login')">Passer</button>
+    </div>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="screen" id="login">
+    <div class="logo-txt">mind.</div>
+    <div class="sub">Connectez-vous pour retrouver votre espace</div>
+    <div class="field"><label>Email</label><input type="email" value="sophie.dupont@gmail.com"></div>
+    <div class="field"><label>Mot de passe</label><input type="password" value="••••••••"></div>
+    <button class="btn" style="margin-top:10px;width:100%" onclick="login()">Se connecter</button>
+    <div style="height:1px;background:#ece8f5;margin:16px 0 12px"></div>
+    <p style="text-align:center;font-size:12px;color:var(--gris);margin-bottom:10px">Vous êtes praticien ?</p>
+    <button class="btn" style="width:100%;background:rgba(94,204,186,.15);color:#7fd9c9;border:1.5px solid #3da89e" onclick="go('m-login')">🩺&nbsp; Connexion Espace Médecin</button>
+    <div class="login-alt">Pas encore de compte ? <b>S'inscrire</b></div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="screen" id="home">
+    <div class="app-header">
+      <div class="logo-txt">mind.</div>
+      <div class="avatar" onclick="go('settings')">SD</div>
+    </div>
+    <div class="scroll">
+      <div class="page-title">Bonjour Sophie 👋</div>
+      <div class="page-sub">Jeudi 11 juin — voici votre journée</div>
+
+      <div class="stats">
+        <div class="stat" style="background:var(--violet-light)"><div class="n">3</div><div class="l">RDV cette semaine</div></div>
+        <div class="stat" style="background:var(--vert)"><div class="n">2</div><div class="l">Tâches en attente</div></div>
+        <div class="stat" style="background:var(--jaune)"><div class="n">1</div><div class="l">Document à envoyer</div></div>
+      </div>
+
+      <div class="section-h"><h3>Aujourd'hui</h3><span onclick="go('agenda')">Agenda →</span></div>
+      <div class="card violet">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.18)">🗣️</div>
+          <div class="grow"><div class="t1">Orthophonie — Tom</div><div class="t2">16h30 · Cabinet Mme Fontaine, Versailles</div></div>
+          <div class="badge" style="background:rgba(255,255,255,.2);color:#fff">Dans 2h</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row">
+          <div class="ico" style="background:var(--jaune)">💊</div>
+          <div class="grow"><div class="t1">Renouvellement ordonnance</div><div class="t2">Avant 18h · Pharmacie du Château</div></div>
+        </div>
+      </div>
+
+      <div class="section-h"><h3>À ne pas oublier</h3><span onclick="go('admin')">Tout voir →</span></div>
+      <div class="card vert">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.6)">📄</div>
+          <div class="grow"><div class="t1">Dossier MDPH — renouvellement</div><div class="t2">Échéance : 30 juin · 2 pièces manquantes</div></div>
+        </div>
+        <div class="progress-bar dark"><div class="progress-fill violet" style="width:70%"></div></div>
+      </div>
+
+      <div class="section-h"><h3>Mes enfants</h3></div>
+      <div class="card lila" onclick="go('child')" style="cursor:pointer">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.07);font-family:'Fredoka';font-weight:700;color:var(--violet)">L</div>
+          <div class="grow"><div class="t1">Tom, 8 ans</div><div class="t2">TDAH · Dyslexie — 4 suivis actifs</div></div>
+          <div class="chev">›</div>
+        </div>
+      </div>
+      <div class="card" onclick="toast('Profil de Léa — bientôt disponible')" style="cursor:pointer">
+        <div class="row">
+          <div class="ico" style="background:var(--jaune);font-family:'Fredoka';font-weight:700;color:#b07b2e">J</div>
+          <div class="grow"><div class="t1">Léa, 5 ans</div><div class="t2">Suivi psychomotricité — 1 suivi actif</div></div>
+          <div class="chev">›</div>
+        </div>
+      </div>
+      <div style="height:24px"></div>
+    </div>
+    <button class="fab" onclick="openModal()">+</button>
+  </div>
+
+  <!-- AGENDA -->
+  <div class="screen" id="agenda">
+    <div class="app-header">
+      <div class="logo-txt">mind.</div>
+      <div class="avatar" onclick="go('settings')">SD</div>
+    </div>
+    <div class="page-title">Agenda</div>
+    <div class="page-sub">Juin 2026</div>
+    <div class="cal-week">
+      <div class="cal-day" onclick="selDay(this)"><div class="d">Lun</div><div class="n">8</div></div>
+      <div class="cal-day" onclick="selDay(this)"><div class="d">Mar</div><div class="n">9</div></div>
+      <div class="cal-day" onclick="selDay(this)"><div class="d">Mer</div><div class="n">10</div></div>
+      <div class="cal-day sel" onclick="selDay(this)"><div class="d">Jeu</div><div class="n">11</div></div>
+      <div class="cal-day" onclick="selDay(this)"><div class="d">Ven</div><div class="n">12</div></div>
+      <div class="cal-day" onclick="selDay(this)"><div class="d">Sam</div><div class="n">13</div></div>
+      <div class="cal-day" onclick="selDay(this)"><div class="d">Dim</div><div class="n">14</div></div>
+    </div>
+    <div class="scroll">
+      <div class="timeline-item">
+        <div class="tl-time">09:00</div>
+        <div class="tl-card" style="background:var(--vert)">
+          <div class="t1">École — réunion ESS</div>
+          <div class="t2">Équipe de suivi de scolarisation · École Jean Moulin</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">14:00</div>
+        <div class="tl-card" style="background:var(--jaune)">
+          <div class="t1">Appel CPAM</div>
+          <div class="t2">Suivi remboursement séances psychomot — Léa</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">16:30</div>
+        <div class="tl-card" style="background:var(--violet);color:#fff">
+          <div class="t1">Orthophonie — Tom</div>
+          <div class="t2" style="color:rgba(255,255,255,.75)">Mme Fontaine · 12 rue de la Paroisse, Versailles</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">18:00</div>
+        <div class="tl-card" style="background:var(--violet-light)">
+          <div class="t1">Passage de relais — Sarah</div>
+          <div class="t2">Tom et Léa chez leur maman jusqu'à dimanche</div>
+        </div>
+      </div>
+      <div style="height:90px"></div>
+    </div>
+    <button class="fab" onclick="openModal()">+</button>
+  </div>
+
+  <!-- SUIVI -->
+  <div class="screen" id="suivi">
+    <div class="app-header">
+      <div class="logo-txt">mind.</div>
+      <div class="avatar" onclick="go('settings')">SD</div>
+    </div>
+    <div class="page-title">Suivi thérapeutique</div>
+    <div class="page-sub">Séances, progrès et comptes-rendus</div>
+    <div class="child-tabs">
+      <button class="child-tab on">Tom</button>
+      <button class="child-tab" onclick="toast('Suivis de Léa — démo')">Léa</button>
+    </div>
+    <div class="scroll">
+      <div class="card violet">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.18)">🗣️</div>
+          <div class="grow"><div class="t1">Orthophonie</div><div class="t2">Mme Fontaine · 2 séances/semaine</div></div>
+          <div class="badge" style="background:rgba(255,255,255,.2);color:#fff">24/40</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+      </div>
+      <div class="card vert">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.6)">🧩</div>
+          <div class="grow"><div class="t1">Psychologue TCC</div><div class="t2">Dr Mercier · 1 séance/semaine</div></div>
+          <div class="badge" style="background:rgba(255,255,255,.07);color:#3a7a72">8/12</div>
+        </div>
+        <div class="progress-bar dark"><div class="progress-fill violet" style="width:66%"></div></div>
+      </div>
+      <div class="card jaune">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.7)">✍️</div>
+          <div class="grow"><div class="t1">Graphothérapie</div><div class="t2">M. Lambert · 1 séance/2 semaines</div></div>
+          <div class="badge" style="background:rgba(255,255,255,.07);color:#b07b2e">5/10</div>
+        </div>
+        <div class="progress-bar dark"><div class="progress-fill violet" style="width:50%"></div></div>
+      </div>
+      <div class="card">
+        <div class="row">
+          <div class="ico" style="background:var(--violet-light)">👨‍⚕️</div>
+          <div class="grow"><div class="t1">Neuropédiatre</div><div class="t2">Dr Haddad · Bilan annuel — prochain RDV 03/09</div></div>
+          <div class="badge b-violet">Suivi</div>
+        </div>
+      </div>
+
+      <div class="section-h"><h3>Derniers comptes-rendus</h3></div>
+      <div class="card">
+        <div class="row">
+          <div class="ico" style="background:var(--vert)">📝</div>
+          <div class="grow"><div class="t1">Séance ortho du 9 juin</div><div class="t2">« Bons progrès en conscience phonologique. Tom gagne en confiance à la lecture orale. »</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row">
+          <div class="ico" style="background:var(--jaune)">📝</div>
+          <div class="grow"><div class="t1">Séance TCC du 5 juin</div><div class="t2">« Travail sur la gestion de la frustration. Exercices de respiration à poursuivre à la maison. »</div></div>
+        </div>
+      </div>
+      <div style="height:90px"></div>
+    </div>
+    <button class="fab" onclick="openModal()">+</button>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="screen" id="admin">
+    <div class="app-header">
+      <div class="logo-txt">mind.</div>
+      <div class="avatar" onclick="go('settings')">SD</div>
+    </div>
+    <div class="page-title">Démarches</div>
+    <div class="page-sub">Dossiers, documents et remboursements</div>
+    <div class="scroll">
+      <div class="card violet">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.18)">📄</div>
+          <div class="grow"><div class="t1">Dossier MDPH — Tom</div><div class="t2">Renouvellement AEEH · Échéance 30 juin</div></div>
+          <div class="badge" style="background:rgba(255,255,255,.2);color:#fff">70%</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+      </div>
+
+      <div class="section-h"><h3>Tâches</h3><span onclick="toast('Toutes les tâches — démo')">Tout voir →</span></div>
+      <div class="card"><div class="row"><div class="check" onclick="tick(this)"></div><div class="grow"><div class="t1">Demander certificat médical au Dr Haddad</div><div class="t2">Pour le dossier MDPH · Urgent</div></div><div class="badge b-jaune">⏰ 15/06</div></div></div>
+      <div class="card"><div class="row"><div class="check" onclick="tick(this)"></div><div class="grow"><div class="t1">Envoyer GEVA-Sco à l'enseignante référente</div><div class="t2">Mme Dubois · École Jean Moulin</div></div><div class="badge b-violet">📎 Joint</div></div></div>
+      <div class="card done"><div class="row"><div class="check on" onclick="tick(this)"></div><div class="grow"><div class="t1">Scanner le bilan orthophonique</div><div class="t2">Ajouté au dossier le 8 juin</div></div></div></div>
+
+      <div class="section-h"><h3>Remboursements</h3></div>
+      <div class="card vert">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.6)">💶</div>
+          <div class="grow"><div class="t1">Psychomotricité — Léa (mai)</div><div class="t2">180 € · CPAM + mutuelle</div></div>
+          <div class="badge" style="background:rgba(255,255,255,.07);color:#3a7a72">Remboursé</div>
+        </div>
+      </div>
+      <div class="card jaune">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.7)">💶</div>
+          <div class="grow"><div class="t1">Graphothérapie — Tom (mai-juin)</div><div class="t2">240 € · Dossier mutuelle envoyé</div></div>
+          <div class="badge" style="background:rgba(255,255,255,.07);color:#b07b2e">En cours</div>
+        </div>
+      </div>
+
+      <div class="section-h"><h3>Coffre-fort documents</h3><span onclick="toast('Coffre-fort — démo')">Ouvrir →</span></div>
+      <div class="card">
+        <div class="row">
+          <div class="ico" style="background:var(--violet-light)">🔒</div>
+          <div class="grow"><div class="t1">14 documents sécurisés</div><div class="t2">Bilans, ordonnances, notifications MDPH, jugements</div></div>
+          <div class="chev">›</div>
+        </div>
+      </div>
+      <div style="height:90px"></div>
+    </div>
+    <button class="fab" onclick="openModal()">+</button>
+  </div>
+
+  <!-- FAMILLE -->
+  <div class="screen" id="famille">
+    <div class="app-header">
+      <div class="logo-txt">mind.</div>
+      <div class="avatar" onclick="go('settings')">SD</div>
+    </div>
+    <div class="page-title">Co-parentalité</div>
+    <div class="page-sub">Espace partagé avec Sarah</div>
+    <div class="scroll">
+      <div class="card lila">
+        <div class="row">
+          <div class="ico" style="background:#fff">🗓️</div>
+          <div class="grow"><div class="t1">Garde cette semaine</div><div class="t2">Lun–Jeu : Sophie · Ven–Dim : Sarah</div></div>
+        </div>
+      </div>
+      <div class="card vert">
+        <div class="row">
+          <div class="ico" style="background:rgba(255,255,255,.6)">🔄</div>
+          <div class="grow"><div class="t1">Synchronisation active</div><div class="t2">Sarah voit l'agenda, les suivis et les documents partagés en temps réel</div></div>
+        </div>
+      </div>
+
+      <div class="section-h"><h3>Messages</h3></div>
+      <div style="padding:0 22px">
+        <div class="msg them"><div class="who">Sarah</div>Tu peux récupérer le compte-rendu de l'ortho ce soir ? J'aimerais le lire avant la réunion ESS 🙏</div>
+        <div class="msg me">Oui je le scanne direct après la séance de 16h30, tu l'auras dans l'appli ce soir 👍</div>
+        <div class="msg them"><div class="who">Sarah</div>Parfait. Et j'ai pris le RDV neuropédiatre pour le 3 septembre, je l'ai ajouté à l'agenda.</div>
+        <div class="msg me">Vu ! Merci 💜</div>
+      </div>
+      <div style="padding:14px 22px">
+        <div class="row">
+          <input style="flex:1;border:2px solid #eee;border-radius:99px;padding:12px 18px;font-family:'Poppins';font-size:13px;outline:none" placeholder="Écrire un message…" id="msgInput">
+          <button class="btn" style="width:46px;height:46px;border-radius:50%;padding:0;flex-shrink:0" onclick="sendMsg()">➤</button>
+        </div>
+      </div>
+      <div style="height:90px"></div>
+    </div>
+  </div>
+
+  <!-- PROFIL ENFANT -->
+  <div class="screen" id="child">
+    <div class="back-btn" onclick="goBack()">‹ Retour</div>
+    <div class="scroll">
+      <div style="text-align:center;padding:6px 22px 20px">
+        <div style="width:84px;height:84px;border-radius:28px;background:var(--violet);color:#fff;font-family:'Fredoka';font-weight:700;font-size:36px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px">T</div>
+        <div style="font-family:'Fredoka';font-weight:600;font-size:22px">Tom Dupont</div>
+        <div class="t2">8 ans · CE2 · École Jean Moulin, Versailles</div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
+          <span class="badge b-violet">TDAH</span>
+          <span class="badge b-vert">Dyslexie</span>
+          <span class="badge b-jaune">AEEH</span>
+        </div>
+      </div>
+
+      <div class="section-h"><h3>Équipe de soin</h3></div>
+      <div class="card"><div class="row"><div class="ico" style="background:var(--violet-light)">🗣️</div><div class="grow"><div class="t1">Mme Fontaine</div><div class="t2">Orthophoniste · 01 39 50 12 34</div></div><div class="chev">›</div></div></div>
+      <div class="card"><div class="row"><div class="ico" style="background:var(--vert)">🧩</div><div class="grow"><div class="t1">Dr Mercier</div><div class="t2">Psychologue TCC · 01 39 51 87 65</div></div><div class="chev">›</div></div></div>
+      <div class="card"><div class="row"><div class="ico" style="background:var(--jaune)">👨‍⚕️</div><div class="grow"><div class="t1">Dr Haddad</div><div class="t2">Neuropédiatre · CH Versailles</div></div><div class="chev">›</div></div></div>
+
+      <div class="section-h"><h3>Aménagements scolaires</h3></div>
+      <div class="card lila">
+        <div class="t1" style="margin-bottom:6px">PAP en cours</div>
+        <div class="t2">Tiers-temps · supports adaptés (police OpenDyslexic, consignes orales) · place au premier rang · AESH 12h/semaine</div>
+      </div>
+
+      <div class="section-h"><h3>Notes importantes</h3></div>
+      <div class="card jaune">
+        <div class="t2" style="color:#f4f1fb">⚠️ Allergie : arachides (PAI en place à la cantine)<br>💊 Traitement : Quasym LP 20mg le matin — renouvellement mensuel</div>
+      </div>
+      <div style="height:40px"></div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="screen" id="settings">
+    <div class="back-btn" onclick="go('home')">‹ Retour</div>
+    <div class="page-title">Paramètres</div>
+    <div class="scroll" style="margin-top:8px">
+      <div class="set-row">
+        <div class="avatar" style="width:48px;height:48px;font-size:17px">SD</div>
+        <div class="grow"><div class="t1">Sophie Dupont</div><div class="t2">sophie-dupont@hotmail.fr · Forfait Famille+</div></div>
+        <div class="chev">›</div>
+      </div>
+      <div class="set-row"><div class="ico" style="background:var(--violet-light);width:36px;height:36px;font-size:16px">🔔</div><div class="grow t1">Notifications de rappel</div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="set-row"><div class="ico" style="background:var(--vert);width:36px;height:36px;font-size:16px">🔄</div><div class="grow t1">Synchro co-parent (Sarah)</div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="set-row"><div class="ico" style="background:var(--jaune);width:36px;height:36px;font-size:16px">📅</div><div class="grow t1">Export vers calendrier iPhone</div><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+      <div class="set-row" onclick="toast('Gestion des profils — démo')"><div class="ico" style="background:var(--violet-light);width:36px;height:36px;font-size:16px">👧</div><div class="grow t1">Profils enfants</div><div class="chev">›</div></div>
+      <div class="set-row" onclick="toast('Confidentialité — démo')"><div class="ico" style="background:#f3f0f9;width:36px;height:36px;font-size:16px">🔒</div><div class="grow t1">Confidentialité & données de santé</div><div class="chev">›</div></div>
+      <div class="set-row" onclick="toast('Aide — démo')"><div class="ico" style="background:#f3f0f9;width:36px;height:36px;font-size:16px">💬</div><div class="grow t1">Aide & contact</div><div class="chev">›</div></div>
+      <div style="padding:22px"><button class="btn ghost" style="color:#d9534f" onclick="logout()">Se déconnecter</button></div>
+      <div style="text-align:center;padding-bottom:30px"><span class="logo-txt" style="font-size:18px;color:#d6cce8">mind.</span><div class="t2" style="font-size:10px">version 1.0.0</div></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav" id="nav" style="display:none;position:absolute;bottom:0;left:0;right:0;z-index:10">
+    <div class="nav-item on" data-s="home" onclick="tab(this)">
+      <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>Accueil
+    </div>
+    <div class="nav-item" data-s="agenda" onclick="tab(this)">
+      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Agenda
+    </div>
+    <div class="nav-item" data-s="suivi" onclick="tab(this)">
+      <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 8-6-16-3 8H2"/></svg>Suivi
+    </div>
+    <div class="nav-item" data-s="admin" onclick="tab(this)">
+      <svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M9 14l2 2 4-4"/></svg>Démarches
+    </div>
+    <div class="nav-item" data-s="famille" onclick="tab(this)">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M21 21v-2a4 4 0 0 0-3-3.87M16 3.13A4 4 0 0 1 16 11"/></svg>Famille
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <!-- ===== CGU ===== -->
+<div class="screen" id="cgu">
+  <div style="background:var(--violet);padding:40px 24px 20px;text-align:center">
+    <div style="width:44px;height:44px;background:rgba(255,255,255,.18);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px"><span style="font-family:'Fredoka',sans-serif;font-size:22px;color:#fff;font-weight:700">M</span></div>
+    <h2 style="color:#fff;font-size:18px;font-weight:600">Avant de commencer</h2>
+    <p style="color:rgba(255,255,255,.8);font-size:11px;margin-top:4px">Lisez et acceptez nos conditions</p>
+  </div>
+  <div class="scroll" style="padding:20px 16px 32px">
+    <p style="font-size:13px;font-weight:600;color:#f4f1fb;margin-bottom:4px">Votre confiance est notre priorité.</p>
+    <p style="font-size:12px;color:var(--gris);margin-bottom:16px;line-height:1.5">Mind. traite des données de santé sensibles concernant vos enfants. Prenez le temps de lire nos engagements.</p>
+    <!-- CGU Card -->
+    <div style="background:rgba(255,255,255,.06);border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid rgba(255,255,255,.14);border-top:4px solid var(--violet)">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="width:36px;height:36px;background:var(--violet-light);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">📋</div>
+        <div>
+          <p style="font-size:13px;font-weight:600;color:#f4f1fb">Conditions Générales d'Utilisation</p>
+          <p style="font-size:11px;color:var(--gris);margin-top:4px;line-height:1.5">Droits et obligations des utilisateurs, limites de responsabilité, accès au service.</p>
+          <span style="font-size:11px;color:var(--violet);font-weight:600;cursor:pointer" onclick="toast('CGU — version complète disponible')">Lire les CGU complètes →</span>
+        </div>
+      </div>
+    </div>
+    <!-- Confidentialité Card -->
+    <div style="background:rgba(255,255,255,.06);border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid rgba(255,255,255,.14);border-top:4px solid #3da89e">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="width:36px;height:36px;background:rgba(94,204,186,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">🔐</div>
+        <div>
+          <p style="font-size:13px;font-weight:600;color:#f4f1fb">Politique de confidentialité</p>
+          <p style="font-size:11px;color:var(--gris);margin-top:4px;line-height:1.5">Données chiffrées, hébergement HDS agréé, droits RGPD complets.</p>
+          <span style="font-size:11px;color:#7fd9c9;font-weight:600;cursor:pointer" onclick="toast('Politique — version complète disponible')">Lire la politique complète →</span>
+        </div>
+      </div>
+    </div>
+    <!-- RGPD Badge -->
+    <div style="background:rgba(94,204,186,.15);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:20px">
+      <span style="font-size:18px">🇪🇺</span>
+      <div>
+        <p style="font-size:11px;font-weight:600;color:#7fd9c9">Conforme RGPD · Données hébergées en France</p>
+        <p style="font-size:10px;color:var(--gris)">Aucune donnée revendue à des tiers</p>
+      </div>
+    </div>
+    <!-- Checkboxes -->
+    <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px">
+      <div style="width:22px;height:22px;background:var(--violet);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><span style="color:#fff;font-size:13px;font-weight:700">✓</span></div>
+      <p style="font-size:12px;color:#f4f1fb;line-height:1.5">J'ai lu et j'accepte les <span style="color:var(--violet);font-weight:600">Conditions Générales d'Utilisation</span></p>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px">
+      <div style="width:22px;height:22px;background:var(--violet);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><span style="color:#fff;font-size:13px;font-weight:700">✓</span></div>
+      <p style="font-size:12px;color:#f4f1fb;line-height:1.5">J'accepte la <span style="color:var(--violet);font-weight:600">politique de confidentialité</span></p>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:24px">
+      <div style="width:22px;height:22px;border:1.5px solid #ccc;border-radius:6px;flex-shrink:0;margin-top:1px"></div>
+      <p style="font-size:12px;color:var(--gris)">Recevoir les conseils Mind. <span style="font-size:10px;background:#fff3d0;color:#e5b878;padding:1px 6px;border-radius:8px">Optionnel</span></p>
+    </div>
+    <button class="btn" style="width:100%;margin-bottom:12px" onclick="go('plan')">Accepter et continuer</button>
+    <p style="text-align:center;font-size:11px;color:var(--gris);cursor:pointer" onclick="go('login')">Je refuse — Quitter l'application</p>
+  </div>
+</div>
+
+<!-- ===== PLAN ===== -->
+<div class="screen" id="plan">
+  <div style="background:var(--violet);padding:40px 24px 20px;text-align:center;position:relative;overflow:hidden">
+    <div style="position:absolute;top:20px;left:40px;width:6px;height:6px;background:rgba(255,255,255,.3);border-radius:50%"></div>
+    <div style="position:absolute;top:50px;right:60px;width:4px;height:4px;background:rgba(255,255,255,.3);border-radius:50%"></div>
+    <div style="width:44px;height:44px;background:rgba(255,255,255,.18);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px"><span style="font-family:'Fredoka',sans-serif;font-size:22px;color:#fff;font-weight:700">M</span></div>
+    <h2 style="color:#fff;font-size:20px;font-weight:600">Choisissez votre plan</h2>
+    <p style="color:rgba(255,255,255,.8);font-size:11px;margin-top:4px">Commencez gratuitement, évoluez à votre rythme</p>
+  </div>
+  <div class="scroll" style="padding:16px 16px 32px">
+    <!-- Gratuit -->
+    <div style="background:rgba(255,255,255,.06);border-radius:20px;padding:20px;margin-bottom:12px;border:1px solid rgba(255,255,255,.14)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-family:'Fredoka',sans-serif;font-size:20px;color:var(--violet);font-weight:700">freeMium.</span>
+        <span style="font-size:10px;background:#eee;color:#666;padding:3px 10px;border-radius:20px;font-weight:500">Actuel</span>
+      </div>
+      <div style="text-align:center;padding:8px 0 12px">
+        <span style="font-family:'Fredoka',sans-serif;font-size:34px;color:#f4f1fb;font-weight:700">0 €</span>
+        <span style="font-size:12px;color:var(--gris)">/mois</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:8px"><div style="width:7px;height:7px;background:linear-gradient(135deg,#5eccba,#2d786e);border-radius:50%"></div><span style="font-size:12px;color:#f4f1fb">Fiche personnelle</span></div>
+        <div style="display:flex;align-items:center;gap:8px"><div style="width:7px;height:7px;background:linear-gradient(135deg,#5eccba,#2d786e);border-radius:50%"></div><span style="font-size:12px;color:#f4f1fb">Bulle de discussion médecins</span></div>
+        <div style="display:flex;align-items:center;gap:8px"><div style="width:7px;height:7px;background:linear-gradient(135deg,#5eccba,#2d786e);border-radius:50%"></div><span style="font-size:12px;color:#f4f1fb">Ressources informatives</span></div>
+        <div style="display:flex;align-items:center;gap:8px"><div style="width:7px;height:7px;background:linear-gradient(135deg,#5eccba,#2d786e);border-radius:50%"></div><span style="font-size:12px;color:#f4f1fb">Limité à 1 profil</span></div>
+      </div>
+      <button class="btn ghost" style="width:100%;color:var(--gris);border-color:#ccc" onclick="go('free-home')">Continuer gratuitement</button>
+    </div>
+    <!-- Premium -->
+    <div style="position:relative">
+      <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#d4a820;color:#fff;font-size:10px;font-weight:600;padding:4px 14px;border-radius:20px;white-space:nowrap">⭐ Le plus populaire</div>
+      <div style="background:var(--violet);border-radius:20px;padding:20px;padding-top:24px;margin-bottom:8px">
+        <span style="font-family:'Fredoka',sans-serif;font-size:20px;color:#fff;font-weight:700">preMium.</span>
+        <div style="text-align:center;padding:8px 0 12px">
+          <span style="font-family:'Fredoka',sans-serif;font-size:34px;color:#fff;font-weight:700">24,99 €</span>
+          <span style="font-size:11px;color:rgba(255,255,255,.75)">/mois</span>
+          <p style="font-size:10px;color:rgba(255,255,255,.65);margin-top:2px">sans engagement</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:8px"><div style="width:7px;height:7px;background:#d4a820;border-radius:50%"></div><span style="font-size:12px;color:#fff">Calendrier + Rappels intelligents</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div style="width:7px;height:7px;background:#d4a820;border-radius:50%"></div><span style="font-size:12px;color:#fff">Fiches personnelles</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div style="width:7px;height:7px;background:#d4a820;border-radius:50%"></div><span style="font-size:12px;color:#fff">Bulle de discussion médecins</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div style="width:7px;height:7px;background:#d4a820;border-radius:50%"></div><span style="font-size:12px;color:#fff">Ressources informatives</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div style="width:7px;height:7px;background:#d4a820;border-radius:50%"></div><span style="font-size:12px;color:#fff">Plusieurs profils possibles</span></div>
+        </div>
+        <button class="btn" style="width:100%;background:rgba(255,255,255,.07);color:var(--violet)" onclick="go('confirm')">Essayer 30 jours gratuits</button>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:10px;color:var(--gris);margin-top:8px">Sans engagement · Résiliable à tout moment</p>
+    <p style="text-align:center;font-size:10px;color:var(--gris)">MARGE 17,45 € / utilisateur / mois</p>
+  </div>
+</div>
+
+<!-- ===== ACCUEIL GRATUIT ===== -->
+<div class="screen" id="free-home">
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px 8px">
+    <span class="brand" style="font-size:24px;color:var(--violet)">mind.</span>
+    <div style="width:36px;height:36px;background:var(--violet);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff">SD</div>
+  </div>
+  <!-- Banner -->
+  <div style="margin:0 16px 8px;background:rgba(240,180,100,.18);border-radius:12px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border:1px solid #d4a820">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="width:16px;height:16px;background:#d4a820;border-radius:50%"></div>
+      <span style="font-size:12px;font-weight:600;color:var(--violet)">freeMium. — Plan gratuit</span>
+    </div>
+    <span style="font-size:11px;color:#e5c060;font-weight:600;cursor:pointer" onclick="go('paywall')">Passer Premium →</span>
+  </div>
+  <div class="scroll" style="padding:0 16px 16px">
+    <h1 style="font-size:20px;font-weight:600;margin:8px 0 2px">Bonjour Sophie 👋</h1>
+    <p style="font-size:12px;color:var(--gris);margin-bottom:16px">Voici votre espace</p>
+    <!-- Fiche perso -->
+    <h3 style="font-size:15px;font-weight:600;margin-bottom:8px;font-family:'Fredoka',sans-serif">Fiche personnelle</h3>
+    <div class="card lila" style="display:flex;align-items:center;gap:12px;margin-bottom:16px" onclick="go('child')">
+      <div style="width:44px;height:44px;background:var(--violet);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;font-family:'Fredoka',sans-serif">T</div>
+      <div>
+        <p style="font-weight:600;font-size:14px">Tom Dupont</p>
+        <p style="font-size:11px;color:var(--gris)">8 ans · TDAH · Dyslexie</p>
+        <p style="font-size:10px;color:#7fd9c9;font-weight:600">1 profil actif</p>
+      </div>
+      <span style="margin-left:auto;color:#ccc;font-size:18px">›</span>
+    </div>
+    <!-- Messagerie médecins -->
+    <h3 style="font-size:15px;font-weight:600;margin-bottom:8px;font-family:'Fredoka',sans-serif">Messagerie médecins</h3>
+    <div style="background:rgba(94,204,186,.15);border-radius:16px;padding:12px 14px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:20px">💬</span>
+      <div>
+        <p style="font-size:13px;font-weight:600">Dr. Moreau — Neuropédiatre</p>
+        <p style="font-size:11px;color:var(--gris)">Dernier message il y a 2 jours</p>
+      </div>
+      <div style="width:10px;height:10px;background:linear-gradient(135deg,#5eccba,#2d786e);border-radius:50%;margin-left:auto"></div>
+    </div>
+    <!-- Ressources -->
+    <h3 style="font-size:15px;font-weight:600;margin-bottom:8px;font-family:'Fredoka',sans-serif">Ressources</h3>
+    <div style="background:var(--violet-light);border-radius:16px;padding:12px 14px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:20px">📚</span>
+      <div>
+        <p style="font-size:13px;font-weight:600">TDAH — Comprendre les troubles DYS</p>
+        <p style="font-size:11px;color:var(--gris)">5 nouveaux articles cette semaine</p>
+      </div>
+    </div>
+    <!-- Locked: Calendrier -->
+    <h3 style="font-size:15px;font-weight:600;margin-bottom:8px;font-family:'Fredoka',sans-serif">Calendrier & Rappels</h3>
+    <div style="background:rgba(255,255,255,.06);border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid rgba(255,255,255,.14);opacity:.7;position:relative;overflow:hidden;cursor:pointer" onclick="go('paywall')">
+      <div style="position:absolute;inset:0;background:rgba(255,255,255,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px">
+        <div style="background:rgba(240,180,100,.18);border:1px solid #d4a820;border-radius:10px;padding:5px 12px;display:flex;align-items:center;gap:6px">
+          <span style="font-size:13px">🔒</span>
+          <span style="font-size:11px;color:#e5c060;font-weight:600">Fonctionnalité Premium</span>
+        </div>
+        <p style="font-size:11px;color:#e5b878">24,99 € / mois · Essai 30j gratuit</p>
+      </div>
+      <p style="font-size:13px;font-weight:600;color:transparent">Agenda</p>
+      <p style="font-size:11px;color:transparent">placeholder</p>
+      <div style="height:32px"></div>
+    </div>
+    <!-- Locked: Profils multiples -->
+    <h3 style="font-size:15px;font-weight:600;margin-bottom:8px;font-family:'Fredoka',sans-serif">Ajouter un enfant</h3>
+    <div style="background:rgba(255,255,255,.06);border-radius:16px;padding:14px;margin-bottom:16px;border:1px solid rgba(255,255,255,.14);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px" onclick="go('paywall')">
+      <span style="font-size:13px">🔒</span>
+      <span style="font-size:12px;color:#e5c060;font-weight:600">Profils multiples — Premium</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAYWALL ===== -->
+<div class="screen" id="paywall">
+  <div style="position:absolute;inset:0;background:rgba(20,10,40,.85)"></div>
+  <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,.07);border-radius:28px 28px 0 0;padding:24px 20px 40px;max-height:88vh;overflow-y:auto">
+    <div style="text-align:center;margin-bottom:16px">
+      <div style="width:60px;height:60px;background:rgba(212,168,32,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:28px">🔒</div>
+      <h2 style="font-size:20px;font-weight:600;color:#f4f1fb">Passez à preMium.</h2>
+      <p style="font-size:13px;color:var(--gris);margin-top:4px;line-height:1.5">Débloquez le calendrier, les rappels<br>et les profils multiples</p>
+    </div>
+    <!-- What you have -->
+    <p style="font-size:13px;font-weight:600;color:#7fd9c9;margin-bottom:8px">Tout ce que vous avez déjà :</p>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px">
+      <div style="background:rgba(94,204,186,.15);border-radius:10px;padding:8px 12px;font-size:12px;color:#f4f1fb">✓ Fiche personnelle</div>
+      <div style="background:rgba(94,204,186,.15);border-radius:10px;padding:8px 12px;font-size:12px;color:#f4f1fb">✓ Messagerie médecins</div>
+      <div style="background:rgba(94,204,186,.15);border-radius:10px;padding:8px 12px;font-size:12px;color:#f4f1fb">✓ Ressources informatives</div>
+    </div>
+    <!-- What you unlock -->
+    <p style="font-size:13px;font-weight:600;color:var(--violet);margin-bottom:8px">En plus avec Premium :</p>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">
+      <div style="background:var(--violet-light);border-radius:10px;padding:9px 12px;font-size:12px;color:#f4f1fb">⭐ Calendrier + Rappels intelligents</div>
+      <div style="background:var(--violet-light);border-radius:10px;padding:9px 12px;font-size:12px;color:#f4f1fb">⭐ Plusieurs profils enfants</div>
+      <div style="background:var(--violet-light);border-radius:10px;padding:9px 12px;font-size:12px;color:#f4f1fb">⭐ 24,99 € / mois — Marge 17,45 €</div>
+    </div>
+    <div style="background:var(--violet);border-radius:16px;padding:14px;text-align:center;margin-bottom:10px">
+      <p style="font-size:15px;font-weight:600;color:#fff">preMium. · 24,99 € / mois</p>
+      <p style="font-size:11px;color:rgba(255,255,255,.75)">Essai gratuit 30 jours · sans engagement</p>
+    </div>
+    <button class="btn" style="width:100%;background:#d4a820;margin-bottom:10px" onclick="go('confirm')">Essayer gratuitement 30 jours</button>
+    <button class="btn ghost" style="width:100%" onclick="go('free-home')">Rester en version gratuite</button>
+  </div>
+</div>
+
+<!-- ===== CONFIRMATION PREMIUM ===== -->
+<div class="screen" id="confirm">
+  <div style="background:var(--violet);flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;position:relative;overflow:hidden">
+    <div style="position:absolute;top:40px;left:50px;width:6px;height:6px;background:rgba(255,255,255,.3);border-radius:50%"></div>
+    <div style="position:absolute;top:80px;right:70px;width:4px;height:4px;background:rgba(255,255,255,.3);border-radius:50%"></div>
+    <div style="width:90px;height:90px;background:rgba(212,168,32,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:36px">⭐</div>
+    <h1 style="font-size:24px;font-weight:700;color:#fff;font-family:'Fredoka',sans-serif;margin-bottom:8px">Bienvenue dans preMium !</h1>
+    <p style="font-size:13px;color:rgba(255,255,255,.8);margin-bottom:24px;line-height:1.5">Votre essai gratuit de 30 jours<br>commence maintenant</p>
+    <div style="display:flex;flex-direction:column;gap:8px;width:100%;margin-bottom:28px">
+      <div style="background:rgba(255,255,255,.12);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;text-align:left">
+        <span style="font-size:16px">✅</span><span style="font-size:13px;color:#fff;font-weight:500">Calendrier + Rappels intelligents</span>
+      </div>
+      <div style="background:rgba(255,255,255,.12);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;text-align:left">
+        <span style="font-size:16px">✅</span><span style="font-size:13px;color:#fff;font-weight:500">Profils multiples pour vos enfants</span>
+      </div>
+      <div style="background:rgba(255,255,255,.12);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;text-align:left">
+        <span style="font-size:16px">✅</span><span style="font-size:13px;color:#fff;font-weight:500">Messagerie médecins</span>
+      </div>
+      <div style="background:rgba(255,255,255,.12);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;text-align:left">
+        <span style="font-size:16px">✅</span><span style="font-size:13px;color:#fff;font-weight:500">Ressources complètes</span>
+      </div>
+    </div>
+    <button class="btn" style="background:rgba(255,255,255,.07);color:var(--violet);width:100%;margin-bottom:12px" onclick="go('home')">Découvrir mon espace preMium</button>
+    <p style="font-size:10px;color:rgba(255,255,255,.55)">Résiliable à tout moment depuis les paramètres</p>
+  </div>
+</div>
+
+<!-- ===== LOGIN MÉDECIN ===== -->
+<div class="screen" id="m-login">
+  <div style="background:linear-gradient(135deg,rgba(94,204,186,.35),rgba(45,120,110,.25));backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,.14);padding:0 0 0">
+    <div style="padding:40px 24px 28px;text-align:center">
+      <div style="width:72px;height:72px;background:rgba(255,255,255,.2);border-radius:22px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px">
+        <span style="font-family:'Fredoka',sans-serif;font-size:32px;color:#fff;font-weight:700">M</span>
+      </div>
+      <span style="font-family:'Fredoka',sans-serif;font-size:28px;color:#fff;font-weight:700">mind.</span>
+      <div style="background:rgba(255,255,255,.2);border-radius:12px;padding:5px 14px;display:inline-block;margin-top:8px">
+        <p style="font-size:11px;color:#fff;font-weight:600">Espace Médecin</p>
+      </div>
+    </div>
+  </div>
+  <div class="scroll" style="padding:28px 20px 40px">
+    <h2 style="font-size:20px;font-weight:600;margin-bottom:4px">Connexion praticien</h2>
+    <p style="font-size:12px;color:var(--gris);margin-bottom:20px">Accédez au dossier de vos patients</p>
+    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px">Adresse professionnelle</label>
+    <div style="background:rgba(255,255,255,.06);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:14px;color:#f4f1fb">claire.moreau@ch-paris.fr</div>
+    <label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px">Mot de passe</label>
+    <div style="background:rgba(255,255,255,.06);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:12px 14px;margin-bottom:24px;font-size:14px;color:#f4f1fb">••••••••</div>
+    <button class="btn" style="width:100%;background:#3da89e;margin-bottom:14px" onclick="go('m-dash')">Se connecter</button>
+    <p style="text-align:center;font-size:12px;color:var(--gris)">Accès parent ? <span style="color:var(--violet);font-weight:600;cursor:pointer" onclick="go('login')">Changer de vue</span></p>
+  </div>
+</div>
+
+<!-- ===== TABLEAU DE BORD MÉDECIN ===== -->
+<div class="screen" id="m-dash">
+  <div style="background:linear-gradient(135deg,rgba(94,204,186,.35),rgba(45,120,110,.25));backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,.14);padding:14px 16px 16px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:26px;height:26px;background:rgba(255,255,255,.25);border-radius:7px;display:flex;align-items:center;justify-content:center"><span style="font-family:'Fredoka',sans-serif;font-size:14px;color:#fff;font-weight:700">M</span></div>
+        <span style="font-size:16px;font-weight:600;color:#fff">Mind.</span>
+      </div>
+      <div style="background:rgba(255,255,255,.2);border-radius:12px;padding:4px 10px;display:flex;align-items:center;gap:6px">
+        <span style="font-size:10px;color:#fff;font-weight:600">Espace Médecin</span>
+        <div style="width:26px;height:26px;background:rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff">CM</div>
+      </div>
+    </div>
+    <h1 style="font-size:18px;font-weight:600;color:#fff;margin-top:12px">Bonjour, Dr. Moreau</h1>
+    <p style="font-size:11px;color:rgba(255,255,255,.8)">Jeudi 11 juin · 4 patients actifs</p>
+  </div>
+  <div class="scroll" style="padding:16px 16px 100px">
+    <!-- Stats -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">
+      <div style="background:rgba(94,204,186,.15);border-radius:14px;padding:10px 10px 8px"><span style="font-family:'Fredoka',sans-serif;font-size:22px;color:#7fd9c9;font-weight:700">4</span><p style="font-size:10px;color:var(--gris);margin-top:2px">Patients actifs</p></div>
+      <div style="background:rgba(240,180,100,.15);border-radius:14px;padding:10px 10px 8px"><span style="font-family:'Fredoka',sans-serif;font-size:22px;color:#7fd9c9;font-weight:700">2</span><p style="font-size:10px;color:var(--gris);margin-top:2px">Messages non lus</p></div>
+      <div style="background:var(--violet-light);border-radius:14px;padding:10px 10px 8px"><span style="font-family:'Fredoka',sans-serif;font-size:22px;color:#7fd9c9;font-weight:700">1</span><p style="font-size:10px;color:var(--gris);margin-top:2px">CR à rédiger</p></div>
+    </div>
+    <h3 style="font-size:15px;font-weight:600;margin-bottom:10px;font-family:'Fredoka',sans-serif">Mes patients</h3>
+    <!-- Patients -->
+    <div style="background:rgba(255,255,255,.07);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:16px;padding:14px;margin-bottom:10px;border:1px solid rgba(255,255,255,.14);cursor:pointer" onclick="go('m-dossier')">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+        <div style="width:36px;height:36px;background:linear-gradient(135deg,#5eccba,#2d786e);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px">T</div>
+        <div style="flex:1"><p style="font-size:14px;font-weight:600">Tom Dupont</p><p style="font-size:11px;color:var(--gris)">8 ans · TDAH, Dyslexie</p></div>
+        <span style="font-size:10px;background:rgba(94,204,186,.25);color:#7fd9c9;padding:3px 10px;border-radius:20px;font-weight:600">Suivi actif</span>
+      </div>
+      <p style="font-size:11px;color:var(--gris)">Prochain RDV : 03/09</p>
+    </div>
+    <div style="background:rgba(255,255,255,.06);border-radius:16px;padding:14px;margin-bottom:10px;border:1px solid rgba(255,255,255,.14)">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+        <div style="width:36px;height:36px;background:linear-gradient(135deg,#5eccba,#2d786e);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px">E</div>
+        <div style="flex:1"><p style="font-size:14px;font-weight:600">Emma Renard</p><p style="font-size:11px;color:var(--gris)">11 ans · Dyspraxie</p></div>
+        <span style="font-size:10px;background:rgba(240,180,100,.25);color:#e5b878;padding:3px 10px;border-radius:20px;font-weight:600">En attente</span>
+      </div>
+      <p style="font-size:11px;color:var(--gris)">Message en attente</p>
+    </div>
+    <div style="background:rgba(255,255,255,.06);border-radius:16px;padding:14px;border:1px solid rgba(255,255,255,.14)">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+        <div style="width:36px;height:36px;background:linear-gradient(135deg,#5eccba,#2d786e);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px">N</div>
+        <div style="flex:1"><p style="font-size:14px;font-weight:600">Nathan Blanc</p><p style="font-size:11px;color:var(--gris)">7 ans · TDAH</p></div>
+        <span style="font-size:10px;background:rgba(230,100,100,.25);color:#e89090;padding:3px 10px;border-radius:20px;font-weight:600">À planifier</span>
+      </div>
+      <p style="font-size:11px;color:var(--gris)">Bilan à planifier</p>
+    </div>
+  </div>
+  <!-- Nav médecin -->
+  <div id="m-nav" style="position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,.07);border-top:1px solid #e0edec;display:flex;padding:8px 0 20px">
+    <div onclick="go('m-dash')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7fd9c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span style="font-size:9px;color:#7fd9c9;font-weight:500">Patients</span></div>
+    <div onclick="go('m-agenda')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a80a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span style="font-size:9px;color:#a99fc4">Agenda</span></div>
+    <div onclick="go('m-msg')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a80a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span style="font-size:9px;color:#a99fc4">Messages</span></div>
+    <div onclick="go('m-docs')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a80a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><span style="font-size:9px;color:#a99fc4">Documents</span></div>
+    <div onclick="go('m-dash')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a80a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span style="font-size:9px;color:#a99fc4">Profil</span></div>
+  </div>
+</div>
+
+<!-- ===== DOSSIER PATIENT ===== -->
+<div class="screen" id="m-dossier">
+  <div style="background:linear-gradient(135deg,rgba(94,204,186,.35),rgba(45,120,110,.25));backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,.14);padding:14px 16px 16px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="color:#fff;font-size:22px;cursor:pointer" onclick="go('m-dash')">‹</span>
+      <div><h1 style="font-size:18px;font-weight:600;color:#fff">Dossier patient</h1><p style="font-size:11px;color:rgba(255,255,255,.8)">Tom Dupont · 8 ans</p></div>
+    </div>
+  </div>
+  <div class="scroll" style="padding:16px 16px 40px">
+    <div style="background:rgba(255,255,255,.07);border-radius:16px;padding:14px;margin-bottom:14px;border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;gap:12px">
+      <div style="width:48px;height:48px;background:linear-gradient(135deg,#5eccba,#2d786e);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;font-family:'Fredoka',sans-serif">T</div>
+      <div>
+        <p style="font-size:16px;font-weight:600">Tom Dupont</p>
+        <p style="font-size:11px;color:var(--gris)">8 ans · CE2 · École Jean Moulin, Versailles</p>
+        <div style="display:flex;gap:6px;margin-top:4px">
+          <span style="font-size:10px;background:var(--violet-light);color:var(--violet);padding:2px 8px;border-radius:20px;font-weight:600">TDAH</span>
+          <span style="font-size:10px;background:rgba(94,204,186,.15);color:#7fd9c9;padding:2px 8px;border-radius:20px;font-weight:600">Dyslexie</span>
+        </div>
+      </div>
+    </div>
+    <h3 style="font-size:15px;font-weight:600;margin-bottom:8px;font-family:'Fredoka',sans-serif">Diagnostics & traitements</h3>
+    <div style="background:rgba(255,255,255,.06);border-radius:14px;padding:14px;margin-bottom:14px;border:1px solid rgba(255,255,255,.14)">
+      <p style="font-size:13px;font-weight:500;margin-bottom:4px">TDAH combiné — Quasym LP 20mg/matin</p>
+      <p style="font-size:13px;font-weight:500;margin-bottom:4px">Dyslexie phonologique — PAP en cours</p>
+      <p style="font-size:11px;color:var(--gris)">Référent : Dr. Haddad (neuropédiatre)</p>
+    </div>
+    <h3 style="font-size:15px;font-weight:600;margin-bottom:8px;font-family:'Fredoka',sans-serif">Dernière séance</h3>
+    <div style="background:rgba(255,255,255,.06);border-radius:14px;padding:14px;margin-bottom:14px;border:1px solid rgba(255,255,255,.14)">
+      <p style="font-size:13px;font-weight:600;margin-bottom:6px">Orthophonie · 9 juin 2026</p>
+      <p style="font-size:12px;color:var(--gris);line-height:1.5">Bons progrès en conscience phonologique. Tom gagne en confiance à la lecture orale.</p>
+    </div>
+    <h3 style="font-size:15px;font-weight:600;margin-bottom:8px;font-family:'Fredoka',sans-serif">Prochains RDV</h3>
+    <div style="background:rgba(94,204,186,.15);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+      <div><p style="font-size:13px;font-weight:600">Orthophonie</p><p style="font-size:11px;color:var(--gris)">13 juin · 16h30 · Mme Fontaine</p></div>
+      <span style="color:#ccc;font-size:18px">›</span>
+    </div>
+    <div style="background:var(--violet-light);border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+      <div><p style="font-size:13px;font-weight:600">Neuropédiatre</p><p style="font-size:11px;color:var(--gris)">3 sept. · 14h00 · Dr. Haddad</p></div>
+      <span style="color:#ccc;font-size:18px">›</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MESSAGERIE MÉDECIN ===== -->
+<div class="screen" id="m-msg">
+  <div style="background:linear-gradient(135deg,rgba(94,204,186,.35),rgba(45,120,110,.25));backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,.14);padding:14px 16px 16px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;align-items:center;gap:8px"><div style="width:26px;height:26px;background:rgba(255,255,255,.25);border-radius:7px;display:flex;align-items:center;justify-content:center"><span style="font-family:'Fredoka',sans-serif;font-size:14px;color:#fff;font-weight:700">M</span></div><span style="font-size:16px;font-weight:600;color:#fff">Mind.</span></div>
+      <div style="background:rgba(255,255,255,.2);border-radius:12px;padding:4px 10px"><span style="font-size:10px;color:#fff;font-weight:600">Espace Médecin</span></div>
+    </div>
+    <h1 style="font-size:18px;font-weight:600;color:#fff;margin-top:12px">Messages</h1>
+    <p style="font-size:11px;color:rgba(255,255,255,.8)">Échanges sécurisés avec les familles</p>
+  </div>
+  <div class="scroll" style="padding:16px 16px 100px">
+    <h3 style="font-size:15px;font-weight:600;margin-bottom:10px;font-family:'Fredoka',sans-serif">Conversations</h3>
+    <div style="background:rgba(255,255,255,.07);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:16px;padding:14px;margin-bottom:10px;border:1px solid rgba(255,255,255,.14);cursor:pointer">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+        <div style="width:36px;height:36px;background:rgba(94,204,186,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600">SD</div>
+        <div style="flex:1"><p style="font-size:14px;font-weight:600">Sophie Dupont</p><p style="font-size:11px;color:var(--gris)">Re: Tom — séance du 9 juin</p></div>
+        <div style="width:10px;height:10px;background:linear-gradient(135deg,#5eccba,#2d786e);border-radius:50%"></div>
+      </div>
+      <p style="font-size:10px;color:var(--gris)">Il y a 2h</p>
+    </div>
+    <div style="background:rgba(255,255,255,.06);border-radius:16px;padding:14px;margin-bottom:16px;border:1px solid rgba(255,255,255,.14)">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+        <div style="width:36px;height:36px;background:var(--violet-light);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600">PR</div>
+        <div style="flex:1"><p style="font-size:14px;font-weight:600">Pauline Renard</p><p style="font-size:11px;color:var(--gris)">Suivi Emma — bilan</p></div>
+        <span style="color:#ccc;font-size:16px">›</span>
+      </div>
+      <p style="font-size:10px;color:var(--gris)">Il y a 3 jours</p>
+    </div>
+    <!-- Conversation ouverte -->
+    <h3 style="font-size:14px;font-weight:600;margin-bottom:10px">Sophie Dupont · Tom</h3>
+    <div style="background:rgba(255,255,255,.06);border-radius:16px;padding:14px;margin-bottom:10px;border:1px solid rgba(255,255,255,.14)">
+      <div style="background:rgba(94,204,186,.15);border-radius:12px;padding:10px 12px;margin-bottom:8px;max-width:80%">
+        <p style="font-size:12px;color:#f4f1fb">Le compte-rendu de la séance du 9 juin est disponible.</p>
+      </div>
+      <div style="background:linear-gradient(135deg,#5eccba,#2d786e);border-radius:12px;padding:10px 12px;margin-left:auto;max-width:80%;width:fit-content">
+        <p style="font-size:12px;color:#fff">Merci ! Tom a bien travaillé hier soir 🙏</p>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <div style="flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:10px 14px;font-size:13px;color:var(--gris)">Écrire un message…</div>
+      <div style="width:40px;height:40px;background:linear-gradient(135deg,#5eccba,#2d786e);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#fff">➤</div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,.07);border-top:1px solid #e0edec;display:flex;padding:8px 0 20px">
+    <div onclick="go('m-dash')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a80a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span style="font-size:9px;color:#a99fc4">Patients</span></div>
+    <div onclick="go('m-agenda')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a80a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span style="font-size:9px;color:#a99fc4">Agenda</span></div>
+    <div onclick="go('m-msg')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7fd9c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span style="font-size:9px;color:#7fd9c9;font-weight:500">Messages</span></div>
+    <div onclick="go('m-docs')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a80a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><span style="font-size:9px;color:#a99fc4">Documents</span></div>
+    <div onclick="go('m-dash')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a80a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span style="font-size:9px;color:#a99fc4">Profil</span></div>
+  </div>
+</div>
+
+<!-- ===== AGENDA MÉDECIN ===== -->
+<div class="screen" id="m-agenda">
+  <div style="background:linear-gradient(135deg,rgba(94,204,186,.35),rgba(45,120,110,.25));backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,.14);padding:14px 16px 16px">
+    <div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:8px"><div style="width:26px;height:26px;background:rgba(255,255,255,.25);border-radius:7px;display:flex;align-items:center;justify-content:center"><span style="font-family:'Fredoka',sans-serif;font-size:14px;color:#fff;font-weight:700">M</span></div><span style="font-size:16px;font-weight:600;color:#fff">Mind.</span></div><div style="background:rgba(255,255,255,.2);border-radius:12px;padding:4px 10px"><span style="font-size:10px;color:#fff;font-weight:600">Espace Médecin</span></div></div>
+    <h1 style="font-size:18px;font-weight:600;color:#fff;margin-top:12px">Agenda</h1>
+    <p style="font-size:11px;color:rgba(255,255,255,.8)">Juin 2026 · 4 consultations</p>
+  </div>
+  <div class="scroll" style="padding:16px 16px 100px">
+    <div style="display:flex;gap:4px;margin-bottom:16px;overflow-x:auto">
+      <div style="min-width:44px;text-align:center;padding:8px 0;border-radius:12px;background:rgba(255,255,255,.06)"><p style="font-size:9px;color:#a99fc4">Lun</p><p style="font-size:14px;font-weight:500">8</p></div>
+      <div style="min-width:44px;text-align:center;padding:8px 0;border-radius:12px;background:rgba(255,255,255,.06)"><p style="font-size:9px;color:#a99fc4">Mar</p><p style="font-size:14px;font-weight:500">9</p></div>
+      <div style="min-width:44px;text-align:center;padding:8px 0;border-radius:12px;background:rgba(255,255,255,.06)"><p style="font-size:9px;color:#a99fc4">Mer</p><p style="font-size:14px;font-weight:500">10</p></div>
+      <div style="min-width:44px;text-align:center;padding:8px 0;border-radius:12px;background:#3da89e"><p style="font-size:9px;color:rgba(255,255,255,.7)">Jeu</p><p style="font-size:14px;font-weight:600;color:#fff">11</p></div>
+      <div style="min-width:44px;text-align:center;padding:8px 0;border-radius:12px;background:rgba(255,255,255,.06)"><p style="font-size:9px;color:#a99fc4">Ven</p><p style="font-size:14px;font-weight:500">12</p></div>
+      <div style="min-width:44px;text-align:center;padding:8px 0;border-radius:12px;background:rgba(255,255,255,.06)"><p style="font-size:9px;color:#a99fc4">Sam</p><p style="font-size:14px;font-weight:500">13</p></div>
+      <div style="min-width:44px;text-align:center;padding:8px 0;border-radius:12px;background:rgba(255,255,255,.06)"><p style="font-size:9px;color:#a99fc4">Dim</p><p style="font-size:14px;font-weight:500">14</p></div>
+    </div>
+    <h3 style="font-size:14px;font-weight:600;margin-bottom:10px">Jeudi 11 juin</h3>
+    <div style="display:flex;gap:10px;margin-bottom:8px"><p style="font-size:11px;color:#a99fc4;min-width:42px;padding-top:10px">09:00</p><div style="flex:1;background:rgba(94,204,186,.15);border-radius:14px;padding:10px 12px"><p style="font-size:13px;font-weight:600">Tom Dupont</p><p style="font-size:11px;color:#a99fc4">Suivi orthophonie · Mme Fontaine</p></div></div>
+    <div style="display:flex;gap:10px;margin-bottom:8px"><p style="font-size:11px;color:#a99fc4;min-width:42px;padding-top:10px">14:00</p><div style="flex:1;background:rgba(240,180,100,.15);border-radius:14px;padding:10px 12px"><p style="font-size:13px;font-weight:600">Nathan Blanc</p><p style="font-size:11px;color:#a99fc4">Consultation neuropédiatrie</p></div></div>
+    <div style="display:flex;gap:10px;margin-bottom:8px"><p style="font-size:11px;color:#a99fc4;min-width:42px;padding-top:10px">16:30</p><div style="flex:1;background:linear-gradient(135deg,#5eccba,#2d786e);border-radius:14px;padding:10px 12px"><p style="font-size:13px;font-weight:600;color:#fff">Sophie Dupont</p><p style="font-size:11px;color:rgba(255,255,255,.8)">📞 Appel résultats bilan Tom</p></div></div>
+  </div>
+  <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,.07);border-top:1px solid #e0edec;display:flex;padding:8px 0 20px">
+    <div onclick="go('m-dash')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a80a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span style="font-size:9px;color:#a99fc4">Patients</span></div>
+    <div onclick="go('m-agenda')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7fd9c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span style="font-size:9px;color:#7fd9c9;font-weight:500">Agenda</span></div>
+    <div onclick="go('m-msg')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a80a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span style="font-size:9px;color:#a99fc4">Messages</span></div>
+    <div onclick="go('m-docs')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a80a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><span style="font-size:9px;color:#a99fc4">Documents</span></div>
+    <div onclick="go('m-dash')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a80a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span style="font-size:9px;color:#a99fc4">Profil</span></div>
+  </div>
+</div>
+
+<!-- ===== DOCUMENTS MÉDECIN ===== -->
+<div class="screen" id="m-docs">
+  <div style="background:linear-gradient(135deg,rgba(94,204,186,.35),rgba(45,120,110,.25));backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,.14);padding:14px 16px 16px">
+    <div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;align-items:center;gap:8px"><div style="width:26px;height:26px;background:rgba(255,255,255,.25);border-radius:7px;display:flex;align-items:center;justify-content:center"><span style="font-family:'Fredoka',sans-serif;font-size:14px;color:#fff;font-weight:700">M</span></div><span style="font-size:16px;font-weight:600;color:#fff">Mind.</span></div><div style="background:rgba(255,255,255,.2);border-radius:12px;padding:4px 10px"><span style="font-size:10px;color:#fff;font-weight:600">Espace Médecin</span></div></div>
+    <h1 style="font-size:18px;font-weight:600;color:#fff;margin-top:12px">Documents</h1>
+    <p style="font-size:11px;color:rgba(255,255,255,.8)">Ordonnances, bilans, comptes-rendus</p>
+  </div>
+  <div class="scroll" style="padding:16px 16px 100px">
+    <div style="display:flex;border-bottom:1px solid #e0edec;margin-bottom:14px">
+      <div style="flex:1;text-align:center;padding:10px 0;font-size:11px;font-weight:600;color:#7fd9c9;border-bottom:3px solid #3da89e">Ordonnances</div>
+      <div style="flex:1;text-align:center;padding:10px 0;font-size:11px;color:#a99fc4">Bilans</div>
+      <div style="flex:1;text-align:center;padding:10px 0;font-size:11px;color:#a99fc4">Comptes-rendus</div>
+    </div>
+    <h3 style="font-size:14px;font-weight:600;margin-bottom:10px;font-family:'Fredoka',sans-serif">Ordonnances récentes</h3>
+    <div style="background:rgba(255,255,255,.06);border-radius:16px;margin-bottom:10px;overflow:hidden;border:1px solid rgba(255,255,255,.14)">
+      <div style="background:rgba(94,204,186,.15);padding:8px 14px;display:flex;justify-content:space-between;align-items:center"><p style="font-size:13px;font-weight:600">Tom Dupont</p><span style="font-size:10px;background:rgba(255,255,255,.07);color:#7fd9c9;padding:2px 8px;border-radius:20px;font-weight:600">Active</span></div>
+      <div style="padding:12px 14px"><p style="font-size:12px;font-weight:500;margin-bottom:4px">Quasym LP 20mg · 1 cp/matin</p><p style="font-size:11px;color:#a99fc4">Émise le 1 juin 2026 · Valable 1 mois</p><p style="font-size:11px;color:#7fd9c9;font-weight:600;margin-top:6px;cursor:pointer" onclick="toast('Téléchargement en cours...')">Télécharger PDF →</p></div>
+    </div>
+    <div style="background:rgba(255,255,255,.06);border-radius:16px;margin-bottom:10px;overflow:hidden;border:1px solid rgba(255,255,255,.14)">
+      <div style="background:rgba(94,204,186,.2);padding:8px 14px;display:flex;justify-content:space-between;align-items:center"><p style="font-size:13px;font-weight:600">Emma Renard</p><span style="font-size:10px;background:rgba(255,255,255,.07);color:#1a7a3a;padding:2px 8px;border-radius:20px;font-weight:600">Active</span></div>
+      <div style="padding:12px 14px"><p style="font-size:12px;font-weight:500;margin-bottom:4px">Séances psychomotricité x10</p><p style="font-size:11px;color:#a99fc4">Émise le 15 mai 2026 · Valable 6 mois</p><p style="font-size:11px;color:#7fd9c9;font-weight:600;margin-top:6px;cursor:pointer" onclick="toast('Téléchargement en cours...')">Télécharger PDF →</p></div>
+    </div>
+    <div style="background:rgba(255,255,255,.06);border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.14)">
+      <div style="background:#fde8e8;padding:8px 14px;display:flex;justify-content:space-between;align-items:center"><p style="font-size:13px;font-weight:600">Nathan Blanc</p><span style="font-size:10px;background:rgba(255,255,255,.07);color:#a02020;padding:2px 8px;border-radius:20px;font-weight:600">Expirée</span></div>
+      <div style="padding:12px 14px"><p style="font-size:12px;font-weight:500;margin-bottom:4px">Consultation neuropédiatrie</p><p style="font-size:11px;color:#a99fc4">Émise le 20 mai 2026 · Expirée</p></div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,.07);border-top:1px solid #e0edec;display:flex;padding:8px 0 20px">
+    <div onclick="go('m-dash')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a80a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span style="font-size:9px;color:#a99fc4">Patients</span></div>
+    <div onclick="go('m-agenda')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a80a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span style="font-size:9px;color:#a99fc4">Agenda</span></div>
+    <div onclick="go('m-msg')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a80a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span style="font-size:9px;color:#a99fc4">Messages</span></div>
+    <div onclick="go('m-docs')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7fd9c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><span style="font-size:9px;color:#7fd9c9;font-weight:500">Documents</span></div>
+    <div onclick="go('m-dash')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a80a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span style="font-size:9px;color:#a99fc4">Profil</span></div>
+  </div>
+</div>
+
+<div id="modal-bg" onclick="if(event.target===this)closeModal()">
+    <div id="modal">
+      <h3>Ajouter</h3>
+      <div class="card lila" style="margin:0 0 10px;cursor:pointer" onclick="closeModal();toast('Nouveau RDV — démo')"><div class="row"><div class="ico" style="background:#fff">📅</div><div class="grow"><div class="t1">Rendez-vous</div><div class="t2">Médical, thérapeutique ou scolaire</div></div></div></div>
+      <div class="card vert" style="margin:0 0 10px;cursor:pointer" onclick="closeModal();toast('Nouvelle tâche — démo')"><div class="row"><div class="ico" style="background:rgba(255,255,255,.6)">✅</div><div class="grow"><div class="t1">Tâche</div><div class="t2">Démarche ou chose à faire</div></div></div></div>
+      <div class="card jaune" style="margin:0;cursor:pointer" onclick="closeModal();toast('Document ajouté — démo')"><div class="row"><div class="ico" style="background:rgba(255,255,255,.7)">📎</div><div class="grow"><div class="t1">Document</div><div class="t2">Scanner ou importer un fichier</div></div></div></div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+</div>
+
+<script>
+let obIdx = 0;
+const slides = document.querySelectorAll('.ob-slide');
+const dots = document.querySelectorAll('.dot');
+
+setTimeout(() => go('onboarding'), 2200);
+
+let prevScreen = 'home';
+let currentScreen = 'splash';
+function go(id){
+  const el = document.getElementById(id);
+  if(!el){ console.warn('Screen not found:', id); return; }
+  // Mémoriser l'écran précédent pour les boutons retour
+  prevScreen = currentScreen;
+  currentScreen = id;
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const appScreens = ['home','agenda','suivi','admin','famille'];
+  document.getElementById('nav').style.display = appScreens.includes(id) ? 'flex' : 'none';
+  if(appScreens.includes(id)){
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('on', n.dataset.s === id));
+  }
+  // scroll top
+  const sc = el.querySelector('.scroll');
+  if(sc) sc.scrollTop = 0;
+}
+function goBack(){
+  go(prevScreen);
+}
+function nextSlide(){
+  if(obIdx < 2){
+    slides[obIdx].classList.remove('active');
+    dots[obIdx].classList.remove('on');
+    obIdx++;
+    slides[obIdx].classList.add('active');
+    dots[obIdx].classList.add('on');
+    if(obIdx === 2) document.querySelector('.ob-footer .btn').textContent = 'Commencer';
+  } else go('login');
+}
+function login(){ go('cgu'); }
+function logout(){ obIdx = 0; slides.forEach((s,i)=>s.classList.toggle('active',i===0)); dots.forEach((d,i)=>d.classList.toggle('on',i===0)); document.querySelector('.ob-footer .btn').textContent='Continuer'; go('login'); }
+function tab(el){ go(el.dataset.s); }
+function selDay(el){
+  document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('sel'));
+  el.classList.add('sel');
+  if(el.querySelector('.n').textContent !== '11') toast('Journée sans événement — démo');
+}
+function tick(el){
+  el.classList.toggle('on');
+  el.closest('.card').classList.toggle('done');
+  if(el.classList.contains('on')) toast('Tâche terminée ✓');
+}
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._tm);
+  t._tm = setTimeout(() => t.classList.remove('show'), 2200);
+}
+function openModal(){ document.getElementById('modal-bg').classList.add('show'); }
+function closeModal(){ document.getElementById('modal-bg').classList.remove('show'); }
+function sendMsg(){
+  const inp = document.getElementById('msgInput');
+  if(!inp.value.trim()) return;
+  const div = document.createElement('div');
+  div.className = 'msg me';
+  div.textContent = inp.value;
+  inp.closest('div[style]').previousElementSibling.appendChild(div);
+  inp.value = '';
+}
+</script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('sw.js').catch(function(){});
+      });
+    }
+  </script>
+</body>
+</html>
